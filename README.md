@@ -1,18 +1,11 @@
-# Compilers Prog2
+# markdown-compiler
 
-## Target Language: Markdown
+## Introduction
 
-- **Markdown** is a lightweight markup language that you can use to add formatting elements to plaintext text documents.
+This is a project for converting **Markdown** to **HTML**.
+There are only a few syntaxes implemented, feel free to use this project for further usages.
 
-## Compilation and execution environments
+## Course Information
 
-- Scanner: Lex
-- Parser: Yacc
-- Test file: This README.md is your test file :)
-
-## Team members
-
-- 電資三 胡紹宇 108820008
-  - Research, write lex program
-- 電資三 陳力瑋 108820038
-  - Research, write yacc program
+This project is the final term project for a university compiler course.
+Check out the course website [here](https://myweb.ntut.edu.tw/~jhwang/Compiler/) for more information.
