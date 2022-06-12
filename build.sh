@@ -1,0 +1,1 @@
+yacc -d  markdown.y && flex markdown.l && gcc y.tab.c lex.yy.c -ll -o markdown
