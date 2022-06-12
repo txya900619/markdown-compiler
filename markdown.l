@@ -53,14 +53,3 @@ text ([0-9A-Za-z一-龥_,\-\.:/\(\)])+
 {text} { yylval.p_node.text = strdup(yytext);return TEXT;}
 
 %%
-
-/* int main()
-{
-    yylex();
-    return 0;
-}
-
-int yywrap()
-{
-    return 1;
-} */
