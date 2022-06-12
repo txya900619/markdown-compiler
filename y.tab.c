@@ -103,7 +103,9 @@
 
      
 
-    void tag_gen(struct node* p_node,char* content, char* tag_name);
+    void tag_gen(struct node* p_node,char* content, char* tag_name, char* prefix);
+    void ul_tag_gen(struct node* p_node,char* content, char* prefix);
+    void inline_tag_gen(struct node* p_node,char* content, char* tag_name);
     void str_concat(struct node* p_node, char* str1, char* str2);
 
 
@@ -129,12 +131,12 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 17 "markdown.y"
+#line 19 "markdown.y"
 {
    struct node p_node;
 }
 /* Line 193 of yacc.c.  */
-#line 138 "y.tab.c"
+#line 140 "y.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -147,7 +149,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 151 "y.tab.c"
+#line 153 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -434,8 +436,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    28,    28,    33,    33,    36,    37,    38,    39,    40,
-      42,    43,    45,    47,    47,    50,    53,    56,    59
+       0,    30,    30,    35,    35,    38,    39,    40,    41,    42,
+      44,    45,    47,    49,    49,    52,    55,    58,    61
 };
 #endif
 
@@ -1346,95 +1348,95 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 28 "markdown.y"
+#line 30 "markdown.y"
     {
     printf("\n<body>\n%s</body>\n", (yyvsp[(1) - (1)].p_node).text);
 }
     break;
 
   case 3:
-#line 33 "markdown.y"
+#line 35 "markdown.y"
     { str_concat(&(yyval.p_node), (yyvsp[(1) - (2)].p_node).text,(yyvsp[(2) - (2)].p_node).text);}
     break;
 
   case 4:
-#line 33 "markdown.y"
+#line 35 "markdown.y"
     {(yyval.p_node).text = strdup((yyvsp[(1) - (1)].p_node).text);}
     break;
 
   case 5:
-#line 36 "markdown.y"
-    { tag_gen(&(yyval.p_node), (yyvsp[(2) - (3)].p_node).text, "h1"); }
+#line 38 "markdown.y"
+    { tag_gen(&(yyval.p_node), (yyvsp[(2) - (3)].p_node).text, "h1", "  ");}
     break;
 
   case 6:
-#line 37 "markdown.y"
-    { tag_gen(&(yyval.p_node), (yyvsp[(2) - (3)].p_node).text, "h2"); }
+#line 39 "markdown.y"
+    { tag_gen(&(yyval.p_node), (yyvsp[(2) - (3)].p_node).text, "h2", "  ");}
     break;
 
   case 7:
-#line 38 "markdown.y"
-    { tag_gen(&(yyval.p_node), (yyvsp[(2) - (3)].p_node).text, "h3"); }
+#line 40 "markdown.y"
+    { tag_gen(&(yyval.p_node), (yyvsp[(2) - (3)].p_node).text, "h3", "  ");}
     break;
 
   case 8:
-#line 39 "markdown.y"
-    { tag_gen(&(yyval.p_node), (yyvsp[(1) - (2)].p_node).text, "p");}
+#line 41 "markdown.y"
+    { tag_gen(&(yyval.p_node), (yyvsp[(1) - (2)].p_node).text, "p", "  ");}
     break;
 
   case 9:
-#line 40 "markdown.y"
-    {tag_gen(&(yyval.p_node), (yyval.p_node).text, "ul");}
+#line 42 "markdown.y"
+    {ul_tag_gen(&(yyval.p_node), (yyvsp[(1) - (1)].p_node).text, "  ");}
     break;
 
   case 10:
-#line 42 "markdown.y"
+#line 44 "markdown.y"
     { str_concat(&(yyval.p_node), (yyvsp[(1) - (2)].p_node).text, (yyvsp[(2) - (2)].p_node).text);}
     break;
 
   case 11:
-#line 43 "markdown.y"
+#line 45 "markdown.y"
     {(yyval.p_node).text = strdup((yyvsp[(1) - (1)].p_node).text);}
     break;
 
   case 12:
-#line 45 "markdown.y"
-    {tag_gen(&(yyval.p_node), (yyvsp[(2) - (3)].p_node).text, "li");}
+#line 47 "markdown.y"
+    {tag_gen(&(yyval.p_node), (yyvsp[(2) - (3)].p_node).text, "li", "    ");}
     break;
 
   case 13:
-#line 47 "markdown.y"
+#line 49 "markdown.y"
     {str_concat(&(yyval.p_node),(yyvsp[(1) - (2)].p_node).text," "); str_concat(&(yyval.p_node),(yyval.p_node).text, (yyvsp[(2) - (2)].p_node).text);}
     break;
 
   case 14:
-#line 47 "markdown.y"
+#line 49 "markdown.y"
     {(yyval.p_node).text = strdup((yyvsp[(1) - (1)].p_node).text);}
     break;
 
   case 15:
-#line 50 "markdown.y"
+#line 52 "markdown.y"
     {
-        tag_gen(&(yyval.p_node), (yyvsp[(1) - (1)].p_node).text, "b");
+        inline_tag_gen(&(yyval.p_node), (yyvsp[(1) - (1)].p_node).text, "b");
     }
     break;
 
   case 16:
-#line 53 "markdown.y"
+#line 55 "markdown.y"
     {
-        tag_gen(&(yyval.p_node), (yyvsp[(1) - (1)].p_node).text, "i");
+        inline_tag_gen(&(yyval.p_node), (yyvsp[(1) - (1)].p_node).text, "i");
     }
     break;
 
   case 17:
-#line 56 "markdown.y"
+#line 58 "markdown.y"
     {
-        tag_gen(&(yyval.p_node), (yyvsp[(1) - (1)].p_node).text, "u");
+        inline_tag_gen(&(yyval.p_node), (yyvsp[(1) - (1)].p_node).text, "u");
     }
     break;
 
   case 18:
-#line 59 "markdown.y"
+#line 61 "markdown.y"
     {
          (yyval.p_node).text = strdup((yyvsp[(1) - (1)].p_node).text);
     }
@@ -1442,7 +1444,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1446 "y.tab.c"
+#line 1448 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1656,7 +1658,7 @@ yyreturn:
 }
 
 
-#line 63 "markdown.y"
+#line 65 "markdown.y"
 
 
 int main(int argc, char** argv)
@@ -1675,10 +1677,22 @@ int yyerror(const char *msg)
     return 0;
 }
 
-void tag_gen(struct node* p_node,char* content, char* tag_name)
+void tag_gen(struct node* p_node,char* content, char* tag_name, char* prefix)
 {
-    p_node->text = malloc(strlen(content)+strlen(tag_name)+6);
-    sprintf(p_node->text, "<%s>%s</%s>\n", tag_name, content, tag_name);
+    p_node->text = malloc(strlen(prefix)+strlen(content)+strlen(tag_name)*2+6);
+    sprintf(p_node->text, "%s<%s>%s</%s>\n",prefix, tag_name, content, tag_name);
+}
+
+void ul_tag_gen(struct node* p_node,char* content, char* prefix)
+{
+    p_node->text = malloc(strlen(prefix)*2+strlen(content)+11);
+    sprintf(p_node->text, "%s<ul>\n%s%s</ul>\n",prefix, content, prefix);
+}
+
+void inline_tag_gen(struct node* p_node,char* content, char* tag_name)
+{
+    p_node->text = malloc(strlen(content)+strlen(tag_name)*2+5);
+    sprintf(p_node->text, "<%s>%s</%s>", tag_name, content, tag_name);
 }
 
 void str_concat(struct node* p_node, char* str1, char* str2)

@@ -8,7 +8,9 @@
 
      
 
-    void tag_gen(struct node* p_node,char* content, char* tag_name);
+    void tag_gen(struct node* p_node,char* content, char* tag_name, char* prefix);
+    void ul_tag_gen(struct node* p_node,char* content, char* prefix);
+    void inline_tag_gen(struct node* p_node,char* content, char* tag_name);
     void str_concat(struct node* p_node, char* str1, char* str2);
 
 
@@ -25,7 +27,7 @@
 
 %%
 
-markdown:{$1.count = 1}lines {
+markdown:lines {
     printf("\n<body>\n%s</body>\n", $1.text);
 };
 
@@ -33,28 +35,28 @@ markdown:{$1.count = 1}lines {
 lines: line lines { str_concat(&$$, $1.text,$2.text);} | line {$$.text = strdup($1.text);};
 
 
-line: H1 inlines NEWLINE { tag_gen(&$$, $2.text, "h1"); }
-    | H2 inlines NEWLINE { tag_gen(&$$, $2.text, "h2"); }
-    | H3 inlines NEWLINE { tag_gen(&$$, $2.text, "h3"); } 
-    | inlines NEWLINE { tag_gen(&$$, $1.text, "p");}
-    | ullines {tag_gen(&$$, $$.text, "ul");};
+line: H1 inlines NEWLINE { tag_gen(&$$, $2.text, "h1", "  ");}
+    | H2 inlines NEWLINE { tag_gen(&$$, $2.text, "h2", "  ");}
+    | H3 inlines NEWLINE { tag_gen(&$$, $2.text, "h3", "  ");} 
+    | inlines NEWLINE { tag_gen(&$$, $1.text, "p", "  ");}
+    | ullines {ul_tag_gen(&$$, $1.text, "  ");};
 
 ullines: ulline ullines { str_concat(&$$, $1.text, $2.text);} 
         | ulline {$$.text = strdup($1.text);};
 
-ulline: UNORDEREDLIST inlines NEWLINE {tag_gen(&$$, $2.text, "li");}
+ulline: UNORDEREDLIST inlines NEWLINE {tag_gen(&$$, $2.text, "li", "    ");}
   
 inlines: inline inlines {str_concat(&$$,$1.text," "); str_concat(&$$,$$.text, $2.text);} | inline {$$.text = strdup($1.text);};
 
 inline: 
     BOLD {
-        tag_gen(&$$, $1.text, "b");
+        inline_tag_gen(&$$, $1.text, "b");
     } 
     | ITALIC {
-        tag_gen(&$$, $1.text, "i");
+        inline_tag_gen(&$$, $1.text, "i");
     }
     | UNDERLINE {
-        tag_gen(&$$, $1.text, "u");
+        inline_tag_gen(&$$, $1.text, "u");
     } |
      TEXT {
          $$.text = strdup($1.text);
@@ -78,10 +80,22 @@ int yyerror(const char *msg)
     return 0;
 }
 
-void tag_gen(struct node* p_node,char* content, char* tag_name)
+void tag_gen(struct node* p_node,char* content, char* tag_name, char* prefix)
 {
-    p_node->text = malloc(strlen(content)+strlen(tag_name)+6);
-    sprintf(p_node->text, "<%s>%s</%s>\n", tag_name, content, tag_name);
+    p_node->text = malloc(strlen(prefix)+strlen(content)+strlen(tag_name)*2+6);
+    sprintf(p_node->text, "%s<%s>%s</%s>\n",prefix, tag_name, content, tag_name);
+}
+
+void ul_tag_gen(struct node* p_node,char* content, char* prefix)
+{
+    p_node->text = malloc(strlen(prefix)*2+strlen(content)+11);
+    sprintf(p_node->text, "%s<ul>\n%s%s</ul>\n",prefix, content, prefix);
+}
+
+void inline_tag_gen(struct node* p_node,char* content, char* tag_name)
+{
+    p_node->text = malloc(strlen(content)+strlen(tag_name)*2+5);
+    sprintf(p_node->text, "<%s>%s</%s>", tag_name, content, tag_name);
 }
 
 void str_concat(struct node* p_node, char* str1, char* str2)
